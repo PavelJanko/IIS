@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
         factory(App\Room::class, $roomCount)->create();
 
         $this->command->info(
-            'Resetting cached roles and permissions, 
-            seeding roles and attaching permissions to them...'
+            'Resetting cached roles and permissions, '
+            . 'seeding roles and attaching permissions to them...'
         );
         app()['cache']->forget('spatie.permission.cache');
         Permission::create(['name' => 'manage employees']);
