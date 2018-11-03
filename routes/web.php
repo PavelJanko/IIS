@@ -15,6 +15,6 @@ Route::get('/', function () {
     return view('core');
 })->name('homepage');
 
-Auth::routes();
+Route::get('dashboard', 'DeviceController@index')->name('devices.index');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();
