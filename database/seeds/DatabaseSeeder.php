@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $timeStarted = \Carbon\Carbon::now();
-
         static $departmentCount = 6;
         static $roomCount = 100;
         static $employeeCount = 75;
@@ -30,6 +28,7 @@ class DatabaseSeeder extends Seeder
             'Resetting cached roles and permissions, '
             . 'seeding roles and attaching permissions to them...'
         );
+
         app()['cache']->forget('spatie.permission.cache');
         Permission::create(['name' => 'manage employees']);
 
@@ -78,8 +77,5 @@ class DatabaseSeeder extends Seeder
 
                 $repair->update();
             });
-
-        $timeSpent = \Carbon\Carbon::now()->diffForHumans($timeStarted, true);
-        $this->command->comment('All done! Seeding lasted ' . $timeSpent . '.');
     }
 }

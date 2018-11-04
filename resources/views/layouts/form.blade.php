@@ -2,7 +2,7 @@
 
 @section('layout')
     <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
-        <div class="d-flex flex-column justify-content-center col-md-4">
+        <div class="d-flex flex-column justify-content-center col-md-5">
             @yield('content')
         </div>
     </div>

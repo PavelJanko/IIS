@@ -8,7 +8,7 @@
                 <span class="d-flex flex-grow-1 justify-content-end"><samp class="mr-3">Ukázkové údaje: </samp><kbd><kbd>{{ \App\Employee::first()->username }}</kbd> / <kbd>secret</kbd></kbd></span>
             @endif
         </div>
-        <div class="card-body">
+        <div class="card-body py-5">
             @if(App::environment('local'))
             @endif
             <form method="POST" action="{{ route('login') }}">
@@ -50,9 +50,9 @@
                         <button type="submit" class="btn btn-block btn-primary">Přihlásit</button>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="form-group row mb-0">
                     <div class="col-md-7 offset-md-5">
-                        <a class="btn btn-link pl-0" href="{{ route('password.request') }}">Zapomněli jste heslo?</a>
+                        <a class="btn btn-link pl-0 pb-0" href="{{ route('password.request') }}">Zapomněli jste heslo?</a>
                     </div>
                 </div>
             </form>
