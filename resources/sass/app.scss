@@ -1,5 +1,12 @@
 
+$font-family-sans-serif: 'Raleway', sans-serif;
 $navbar-nav-link-padding-x: .75rem;
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+html, body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
