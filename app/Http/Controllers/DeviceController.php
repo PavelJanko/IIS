@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Device;
+use App\Employee;
+use App\Room;
 use Illuminate\Http\Request;
 
 class DeviceController extends Controller
@@ -24,7 +26,13 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        //
+        $employees = Employee::all()->sortBy('name');
+        $rooms = Room::all()->sortBy('label');
+
+        return view('devices.create')->with([
+            'employees' => $employees,
+            'rooms' => $rooms
+        ]);
     }
 
     /**

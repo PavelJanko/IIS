@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Department;
 use App\Employee;
 use App\Http\Controllers\Controller;
+use App\Room;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -68,6 +70,22 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+        ]);
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $departments = Department::all()->sortBy('shortcut');
+        $rooms = Room::all()->sortBy('label');
+
+        return view('auth.register')->with([
+            'departments' => $departments,
+            'rooms' => $rooms
         ]);
     }
 }
