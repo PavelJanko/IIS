@@ -80,8 +80,8 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $departments = Department::all()->sortBy('shortcut');
-        $rooms = Room::all()->sortBy('label');
+        $departments = Department::all();
+        $rooms = Room::all();
 
         return view('auth.register')->with([
             'departments' => $departments,

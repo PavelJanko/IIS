@@ -1,23 +1,25 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
-        <!-- Required meta tags -->
+        {{-- Meta tags --}}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        {{-- Fonts --}}
         <link href="https://fonts.googleapis.com/css?family=Raleway:200,400,600" rel="stylesheet">
 
-        <!-- Bootstrap CSS -->
+        {{-- CSS --}}
         <link rel="stylesheet" href="/css/app.css">
 
-        <title>Hello, world!</title>
+        {{-- Page title --}}
+        <title>{{ config('app.name') }}{!! isset($pageTitle) ? ' &middot; ' . $pageTitle : '' !!}</title>
     </head>
     <body>
         @include('partials.navbar-top')
         @yield('layout')
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+        {{-- Scripts --}}
         <script src="/js/app.js"></script>
     </body>
 </html>
