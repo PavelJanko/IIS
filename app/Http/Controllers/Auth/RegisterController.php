@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Department;
 use App\Employee;
 use App\Http\Controllers\Controller;
+use App\Room;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -28,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = 'administrace/zamestnanci';
 
     /**
      * Create a new controller instance.
@@ -49,10 +51,17 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:employees',
-            'email' => 'required|string|email|max:255|unique:employees',
-            'password' => 'required|string|min:6|confirmed',
+            'department_id' => 'required|numeric|exists:departments,id',
+            'room_id' => 'numeric|exists:rooms,id',
+            'name' => 'required|string',
+            'username' => 'required|unique:employees|string',
+            'email' => 'required|unique:employees|string',
+            'password' => 'required|string|confirmed',
+            'phone_number' => 'numeric',
+            'street' => 'string',
+            'building_number' => 'numeric',
+            'city' => 'string',
+            'zip_code' => 'numeric|size:5'
         ]);
     }
 
@@ -68,6 +77,23 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+        ]);
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $departments = Department::all();
+        $rooms = Room::all();
+
+        return view('auth.register')->with([
+            'departments' => $departments,
+            'pageTitle' => 'Přidat zaměstnance',
+            'rooms' => $rooms
         ]);
     }
 }

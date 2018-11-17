@@ -29,12 +29,12 @@
             @hasrole('administrator')
                 <a class="btn btn-primary mr-2" href="#" role="button">Speciální</a>
             @endhasrole
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('auth.logout') }}">
                 @csrf
                 <button class="btn btn-primary" type="submit">Odhlásit</button>
             </form>
         @else
-            <a class="btn btn-primary" href="{{ route('login') }}" role="button">Přihlásit</a>
+            <a class="btn btn-primary" href="{{ route('auth.login') }}" role="button">Přihlásit</a>
         @endif
     </div>
     </div>

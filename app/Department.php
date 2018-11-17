@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
@@ -12,6 +13,18 @@ class Department extends Model
      * @var array
      */
     protected $fillable = ['shortcut', 'name'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope('shortcut'));
+    }
 
     /**
      * Get all the employees of the department.

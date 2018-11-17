@@ -9,32 +9,10 @@
             @endif
         </div>
         <div class="card-body py-5">
-            @if(App::environment('local'))
-            @endif
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('auth.login') }}">
                 @csrf
-                <div class="form-group row">
-                    <label for="username" class="col-md-5 col-form-label text-right">Uživatelské jméno: </label>
-                    <div class="col-md-4">
-                        <input id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
-                        @if ($errors->has('username'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('username') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="password" class="col-md-5 col-form-label text-right">Heslo:</label>
-                    <div class="col-md-4">
-                        <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-                        @if ($errors->has('password'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('password') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
+                @component('components.form-group', ['format' => 'text', 'name' => 'username', 'mandatory' => true]) Uživatelské jméno @endcomponent
+                @component('components.form-group', ['format' => 'password', 'name' => 'password', 'mandatory' => true]) Heslo @endcomponent
                 <div class="form-group row">
                     <div class="col-md-7 offset-md-5">
                         <div class="form-check">
@@ -45,14 +23,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row mb-1">
+                <div class="form-group row mb-0">
                     <div class="col-md-4 offset-md-5">
                         <button type="submit" class="btn btn-block btn-primary">Přihlásit</button>
-                    </div>
-                </div>
-                <div class="form-group row mb-0">
-                    <div class="col-md-7 offset-md-5">
-                        <a class="btn btn-link pl-0 pb-0" href="{{ route('password.request') }}">Zapomněli jste heslo?</a>
                     </div>
                 </div>
             </form>

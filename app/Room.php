@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
@@ -12,6 +13,18 @@ class Room extends Model
      * @var array
      */
     protected $fillable = ['department_id', 'label', 'description', 'is_in_cvt'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope('label'));
+    }
 
     /**
      * Gets the information whether the device is in CVT or not.
