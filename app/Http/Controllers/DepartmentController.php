@@ -71,6 +71,7 @@ class DepartmentController extends Controller
     {
         return view ('departments.edit')->with([
             'department' => $department,
+            'pageTitle' => 'Upravit ústav ' . $department->shortcut,
         ]);
     }
 
@@ -113,8 +114,8 @@ class DepartmentController extends Controller
     public function validateDepartment(Request $request)
     {
         $this->validate($request, [
-            'shortcut' => 'required|unique:departments,shortcut|alpha',
-            'name' => 'required|unique:departments,name|alpha',
+            'shortcut' => 'required|unique:departments|alpha',
+            'name' => 'required|unique:departments|alpha',
         ]);
     }
 }

@@ -23,7 +23,6 @@ class CreateRepairsTable extends Migration
             $table->unsignedInteger('claimant_id');
             $table->foreign('claimant_id')
                 ->references('id')->on('employees');
-            $table->timestamp('claimed_at')->nullable();
 
             $table->unsignedInteger('repairer_id')->nullable();
             $table->foreign('repairer_id')

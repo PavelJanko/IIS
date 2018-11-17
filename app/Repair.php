@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Repair extends Model
 {
+
+    const CREATED_AT = 'claimed_at';
+
     /**
      * The attributes that are mass assignable.
      *

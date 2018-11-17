@@ -9,7 +9,7 @@
             @endif
         </div>
         <div class="card-body py-5">
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('auth.login') }}">
                 @csrf
                 @component('components.form-group', ['format' => 'text', 'name' => 'username', 'mandatory' => true]) Uživatelské jméno @endcomponent
                 @component('components.form-group', ['format' => 'password', 'name' => 'password', 'mandatory' => true]) Heslo @endcomponent
@@ -23,14 +23,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row mb-1">
+                <div class="form-group row mb-0">
                     <div class="col-md-4 offset-md-5">
                         <button type="submit" class="btn btn-block btn-primary">Přihlásit</button>
-                    </div>
-                </div>
-                <div class="form-group row mb-0">
-                    <div class="col-md-7 offset-md-5">
-                        <a class="btn btn-link pl-0 pb-0" href="{{ route('password.request') }}">Zapomněli jste heslo?</a>
                     </div>
                 </div>
             </form>

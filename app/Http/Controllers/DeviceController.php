@@ -123,7 +123,7 @@ class DeviceController extends Controller
         $this->validate($request, [
             'keeper_id' => 'required|numeric|exists:employees,id',
             'room_id' => 'numeric|exists:rooms,id',
-            'serial_number' => 'required|unique:devices,serial_number|alpha_num',
+            'serial_number' => 'required|unique:devices|alpha_num',
             'name' => 'required|string',
             'type' => 'required|string',
             'manufacturer' => 'required|string',

@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header text-uppercase">Registrovat uživatele</div>
         <div class="card-body py-5">
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('auth.register') }}">
                 @csrf
                 @component('components.form-group', ['format' => 'text', 'name' => 'name', 'mandatory' => true]) Jméno @endcomponent
                 @component('components.form-group', ['format' => 'text', 'name' => 'username', 'mandatory' => true]) Uživatelské jméno @endcomponent
