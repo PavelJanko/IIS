@@ -31,7 +31,8 @@ class CreateRepairsTable extends Migration
 
             $table->string('state');
 
-            $table->timestamps();
+            $table->timestamp('claimed_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

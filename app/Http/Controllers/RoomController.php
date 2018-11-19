@@ -120,7 +120,7 @@ class RoomController extends Controller
     {
         $this->validate($request, [
             'department_id' => 'required|numeric|exists:departments,id',
-            'label' => 'required|unique:rooms|',
+            'label' => 'required|unique:rooms|regex:/[A-Z][0-9]{3}/g',
             'description' => 'required',
             'is_in_cvt' => 'required|boolean'
         ]);
