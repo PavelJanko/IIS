@@ -16,10 +16,13 @@
         <title>{{ config('app.name') }}{!! isset($pageTitle) ? ' &middot; ' . $pageTitle : '' !!}</title>
     </head>
     <body>
-        @include('partials.navbar-top')
-        @yield('layout')
+        <div id="app">
+            @include('partials.navbar-top')
+            @yield('layout')
+        </div>
 
         {{-- Scripts --}}
         <script src="/js/app.js"></script>
+        @yield('scripts')
     </body>
 </html>

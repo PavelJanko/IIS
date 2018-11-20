@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model

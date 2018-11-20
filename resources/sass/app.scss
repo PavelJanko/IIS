@@ -1,12 +1,86 @@
 
-$font-family-sans-serif: 'Raleway', sans-serif;
+$black:    #000;
+$gray-100: #f8f9fa;
+$gray-800: #343a40;
+$dark:     $gray-800;
+$light:    $gray-100;
+$primary:  $dark;
+
+$font-family-sans-serif:    'Raleway', sans-serif;
 $navbar-nav-link-padding-x: .75rem;
+$navbar-light-color:        rgba($black, .7);
+
+$font-weight-light: 200;
+$font-weight-bold:  600;
+
+$table-dark-bg:           $dark;
+$table-dark-border-color: $table-dark-bg;
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-html, body {
+$primaryColor: $light;
+$activeColor: $dark;
+
+// DataTables
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+
+// Hover.css
+@import '~hover.css/scss/options';
+@import '~hover.css/scss/mixins';
+@import '~hover.css/scss/hacks';
+@import '~hover.css/scss/effects/background-transitions/fade';
+
+// SpinKit
+@import '~spinkit/scss/spinners/2-double-bounce.scss';
+
+html, body, #app {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.nav-pills > .nav-link {
+    background-color: $primaryColor;
+    border-radius: 0;
+    color: $navbar-light-color;
+    @include fade();
+
+    &.active {
+        background-color: $activeColor;
+        font-weight: $font-weight-bold;
+    }
+}
+
+.table {
+    > .thead-dark {
+        text-transform: uppercase;
+
+        th {
+            border: 0 solid $light;
+        }
+
+        th:not(:last-child) {
+            border-right-width: 2px;
+        }
+    }
+
+    tr:last-child {
+        th, td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-bottom: 1px solid $gray-300;
+        }
+    }
+
+    margin-bottom: 3rem;
+}
+
+table.dataTable {
+    margin-top: 0 !important;
+    margin-bottom: $spacer !important;
+}
+
+div.dataTables_paginate {
+    margin-right: $spacer !important;
 }

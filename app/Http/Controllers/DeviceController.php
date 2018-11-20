@@ -6,6 +6,8 @@ use App\Device;
 use App\Employee;
 use App\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DeviceController extends Controller
 {
@@ -16,7 +18,10 @@ class DeviceController extends Controller
      */
     public function index()
     {
+        $devices = Device::all();
+
         return view('devices.index')->with([
+            'devices' => $devices,
             'pageTitle' => 'Seznam zařízení',
         ]);
     }
@@ -128,5 +133,16 @@ class DeviceController extends Controller
             'type' => 'required|string',
             'manufacturer' => 'required|string',
         ]);
+    }
+
+    public function getGraphData()
+    {
+        return response()->json(Device::whereMonth('created_at', '=', Carbon::now()->month)
+            ->groupBy('date')
+            ->orderBy('date', 'DESC')
+            ->get(array(
+                DB::raw('Date(created_at) as date'),
+                DB::raw('COUNT(*) as additions')
+            )));
     }
 }

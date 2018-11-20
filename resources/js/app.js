@@ -9,13 +9,27 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+// Import DataTables
+window.dt = require('datatables.net-bs4');
+
+import { faPenSquare, faTimesSquare } from '@fortawesome/pro-solid-svg-icons';
+import { library as faLibrary }  from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+faLibrary.add(faPenSquare, faTimesSquare);
+Vue.component('icon', FontAwesomeIcon);
+
+// Set the moment.js localization to Czech
+window.moment = require('moment');
+moment.locale(process.env.MIX_APP_LOCALE);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('chart', require('./components/ChartComponent.vue'));
 
 const app = new Vue({
     el: '#app'
