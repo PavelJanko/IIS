@@ -14,6 +14,7 @@
         <table id="devicesNotInCVT" class="table">
             <thead class="thead-dark">
                 <tr>
+                    <th></th>
                     <th scope="col">Název</th>
                     <th scope="col">Typ</th>
                     <th scope="col">Výrobce</th>
@@ -25,14 +26,24 @@
             <tbody>
                 @foreach($devices as $device)
                     <tr>
+                        <td><icon icon="pen-square" size="lg" data-toggle="collapse" data-target="#collapseOne"></icon></td>
                         <td>{{ $device->name }}</td>
                         <td>{{ $device->type }}</td>
                         <td>{{ $device->manufacturer }}</td>
                         <td>{{ $device->created_at->format('d. m. Y') }}</td>
                         <td><a href="{{ route('employees.show', $device->keeper->username) }}">{{ $device->keeper->name }}</a></td>
                         <td>
-                            <icon icon="pen-square" size="lg"></icon>
-                            <icon icon="times-square" size="lg"></icon>
+                            <icon icon="pen-square" size="2x"></icon>
+                            <icon icon="times-square" size="2x"></icon>
+                        </td>
+                    </tr>
+                    <tr id="collapseOne" class="collapse" v-if="rowShow">
+                        <td colspan="8">
+                            <table class="table">
+                                <tr>
+                                    <td>Test</td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 @endforeach
@@ -45,7 +56,7 @@
     <script>
         $('#devicesNotInCVT').DataTable({
             columnDefs: [
-                { orderable: false, targets: 5 }
+                { orderable: false, targets: [0, 6] }
             ],
             info: false,
             language: {
@@ -72,7 +83,7 @@
                 }
             },
             lengthChange: false,
-            order: [[ 3, 'desc']],
+            order: [[ 4, 'desc']],
             searching: false,
             select: false
         });
