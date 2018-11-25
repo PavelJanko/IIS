@@ -18,7 +18,7 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        $devices = Device::all();
+        $devices = Device::orderBy('created_at', 'desc')->paginate(40);
 
         return view('devices.index')->with([
             'devices' => $devices,

@@ -22,9 +22,6 @@ $table-dark-border-color: $table-dark-bg;
 $primaryColor: $light;
 $activeColor: $dark;
 
-// DataTables
-@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
-
 // Hover.css
 @import '~hover.css/scss/options';
 @import '~hover.css/scss/mixins';
@@ -38,6 +35,10 @@ html, body, #app {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.collapse:not(.show) {
+    display: none !important;
 }
 
 .nav-pills > .nav-link {
@@ -57,12 +58,24 @@ html, body, #app {
     }
 }
 
-.table {
+#tableMain {
     > .thead-dark {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
         text-transform: uppercase;
 
         th {
             border: 0 solid $light;
+            vertical-align: middle !important;
+        }
+
+        th:first-child {
+            width: 4rem;
+        }
+
+        th:nth-child(2) {
+            width: 30rem;
         }
 
         th:not(:last-child) {
@@ -70,22 +83,48 @@ html, body, #app {
         }
     }
 
-    tr:last-child {
-        th, td {
-            padding: 0.75rem;
-            vertical-align: top;
-            border-bottom: 1px solid $gray-300;
+    > tbody {
+        display: block;
+        max-height: 30rem;
+        overflow-y: auto;
+
+        > tr:nth-child(odd) {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        > tr:nth-child(even) {
+            display: flex;
+            width: 100%;
+
+            > td {
+                width: 100%;
+            }
+        }
+
+        > tr:last-child {
+            th, td {
+                padding: 0.75rem;
+                vertical-align: top;
+                border-bottom: 1px solid $gray-300;
+            }
+        }
+
+        > tr:nth-child(odd), tr:last-child {
+            > td:first-child {
+                width: 4rem;
+            }
+
+            > td:nth-child(2) {
+                width: 30rem;
+            }
+
+            > td {
+                vertical-align: middle !important;
+            }
         }
     }
 
     margin-bottom: 3rem;
-}
-
-table.dataTable {
-    margin-top: 0 !important;
-    margin-bottom: $spacer !important;
-}
-
-div.dataTables_paginate {
-    margin-right: $spacer !important;
 }

@@ -5,7 +5,8 @@
         extends: Line,
 
         mounted() {
-            let url = process.env.MIX_APP_URL + '/api/' + window.location.href.split('/').pop() + '/graf';
+            let url = window.location.href.split('/').pop();
+            url = process.env.MIX_APP_URL + '/api/' + url.substr(0, url.indexOf('?')) + '/graf';
 
             axios.get(url).then((response) => {
                 let data = response.data;

@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Fonts --}}
-        <link href="https://fonts.googleapis.com/css?family=Raleway:200,400,600" rel="stylesheet">
+        {{--<link href="https://fonts.googleapis.com/css?family=Raleway:200,400,600" rel="stylesheet">--}}
 
         {{-- CSS --}}
         <link rel="stylesheet" href="/css/app.css">
