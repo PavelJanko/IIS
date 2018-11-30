@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         static $departmentCount = 6;
         static $roomCount = 100;
         static $employeeCount = 75;
-        static $deviceCount = 500;
+        static $deviceCount = 250;
+        static $repairCount = 500;
 
         $this->command->info('Seeding departments...');
         factory(App\Department::class, $departmentCount)->create();
@@ -65,11 +66,13 @@ class DatabaseSeeder extends Seeder
             });
 
         $this->command->info('Seeding repairs and associating them with devices, etc...');
-        factory(App\Repair::class, 100)->create()
+        factory(App\Repair::class, $repairCount)->create()
             ->each(function ($repair) use ($deviceCount, $employeeCount) {
                 // The claimant and repairer shouldn't be the same person.
                 while (($repair->repairer_id = rand(1, $employeeCount)) == $repair->claimant_id)
                     ;
+
+                $repair->claimed_at = \Carbon\Carbon::now()->subMonth();
 
                 $repair->repaired_at = date('Y-m-d h:m:s', rand(
                     $repair->claimed_at->getTimestamp(), \Carbon\Carbon::now()->timestamp
@@ -77,5 +80,18 @@ class DatabaseSeeder extends Seeder
 
                 $repair->update();
             });
+
+        foreach (App\Device::all() as $device) {
+            if ($device->repairs->count()) {
+                $lastRepair = $device->repairs()->orderBy('repaired_at', 'desc')->first();
+
+                $lastRepair->state = rand(0, 1) ? 'Čekající' : 'Prováděna';
+                $lastRepair->claimed_at = $lastRepair->repaired_at;
+                $lastRepair->repaired_at = NULL;
+                $lastRepair->repairer_id = NULL;
+
+                $lastRepair->update();
+            }
+        }
     }
 }

@@ -18,11 +18,44 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        $devices = Device::orderBy('created_at', 'desc')->paginate(40);
+        $devices = Device::orderBy('created_at', 'desc')->get();
+
+        $collapsibleRows = [];
+
+        $tableHeaders = ['', 'Název', 'Typ', 'Výrobce', 'Datum přidání', 'Akce'];
+        $tableRows = [];
+
+        for ($i = 0; $i < $devices->count(); $i++) {
+            $tableRows[$i] = [
+                $devices[$i]->id,
+                $devices[$i]->name,
+                $devices[$i]->type,
+                $devices[$i]->manufacturer,
+                $devices[$i]->created_at->format('d. m. Y')
+            ];
+
+            $collapsibleRowTitles = ['Je v ČVT', 'Místnost', $devices[$i]->room->isInCVT() ? 'Správce' : 'Vlastník', 'Počet dokončených oprav'];
+
+            $collapsibleRowValues = [
+                $devices[$i]->room->isInCVT() ?
+                    '<icon icon="check" size="2x"></icon>' :
+                    '<icon icon="times" size="2x"></icon>',
+                $devices[$i]->room->label,
+                '<a href="' . route("employees.show", $devices[$i]->keeper->username) . '">' . $devices[$i]->keeper->name . '</a>' .
+                '<a href="' . route("departments.show", $devices[$i]->keeper->department->shortcut) . '"> (' . $devices[$i]->keeper->department->shortcut . ')</a>',
+                $devices[$i]->repairs->where('state', '=', 'Dokončena')->count()
+            ];
+
+            for ($j = 0; $j < count($collapsibleRowTitles); $j++)
+                $collapsibleRows[$i][$j] = [$collapsibleRowTitles[$j], $collapsibleRowValues[$j]];
+        }
 
         return view('devices.index')->with([
+            'collapsibleRows' => $collapsibleRows,
             'devices' => $devices,
             'pageTitle' => 'Seznam zařízení',
+            'tableHeaders' => $tableHeaders,
+            'tableRows' => $tableRows,
         ]);
     }
 

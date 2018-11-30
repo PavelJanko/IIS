@@ -23,6 +23,7 @@
         "lodash": "^4.17.5",
         "popper.js": "^1.14.5",
         "spinkit": "^1.2.5",
+        "sweetalert2": "^7.29.2",
         "vue": "^2.5.7",
         "vue-chartjs": "^3.4.0"
     }

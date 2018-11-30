@@ -16,6 +16,12 @@ class Repair extends Model
      */
     protected $fillable = ['device_id', 'claimant_id', 'claimed_at', 'repairer_id', 'repaired_at', 'state'];
 
+    protected $dates = [
+        'repaired_at',
+        'claimed_at',
+        'updated_at'
+    ];
+
     /**
      * Gets the employee that claimed the repair.
      *

@@ -18,15 +18,18 @@ class CreateRepairsTable extends Migration
 
             $table->unsignedInteger('device_id');
             $table->foreign('device_id')
-                ->references('id')->on('devices');
+                ->references('id')->on('devices')
+                ->onDelete('cascade');
 
             $table->unsignedInteger('claimant_id');
             $table->foreign('claimant_id')
-                ->references('id')->on('employees');
+                ->references('id')->on('employees')
+                ->onDelete('cascade');
 
             $table->unsignedInteger('repairer_id')->nullable();
             $table->foreign('repairer_id')
-                ->references('id')->on('employees');
+                ->references('id')->on('employees')
+                ->onDelete('set null');
             $table->timestamp('repaired_at')->nullable();
 
             $table->string('state');

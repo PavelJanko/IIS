@@ -48,6 +48,6 @@ class Device extends Model
         if ($this->room_id !== NULL)
             return $this->belongsTo(Room::class);
         else
-            return $this->keeper->room;
+            return $this->keeper->belongsTo(Room::class);
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('graph')
-    @component('components.history-chart') Počet nových zařízení denně za poslední měsíc @endcomponent
+    @component('components.history-chart') Počet oprav denně za poslední měsíc @endcomponent
 @endsection
 
 @section('content')

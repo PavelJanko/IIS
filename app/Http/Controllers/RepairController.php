@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Repair;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RepairController extends Controller
 {
@@ -14,8 +16,41 @@ class RepairController extends Controller
      */
     public function index()
     {
+        $repairs = Repair::orderBy('claimed_at', 'desc')->get();
+
+        $collapsibleRows = [];
+
+        $tableHeaders = ['', 'SSN zařízení', 'Žadatel', 'Datum žádosti', 'Stav', 'Akce'];
+        $tableRows = [];
+
+        for ($i = 0; $i < $repairs->count(); $i++) {
+            $tableRows[$i] = [
+                $repairs[$i]->id,
+                $repairs[$i]->device->serial_number,
+                $repairs[$i]->claimant->name,
+                $repairs[$i]->claimed_at->format('d. m. Y'),
+                $repairs[$i]->state
+            ];
+
+            $collapsibleRowTitles = ['Opravář', 'Opraveno dne', $repairs[$i]->device->room->isInCVT() ? 'Správce' : 'Vlastník', 'Místnost zařízení'];
+
+            $collapsibleRowValues = [
+                $repairs[$i]->repairer === null ? 'Oprava nedokončena' : $repairs[$i]->repairer->name,
+                $repairs[$i]->repairer === null ? 'Oprava nedokončena' : $repairs[$i]->repaired_at->format('d. m. Y'),
+                $repairs[$i]->device->keeper->name,
+                $repairs[$i]->device->room->label
+            ];
+
+            for ($j = 0; $j < count($collapsibleRowTitles); $j++)
+                $collapsibleRows[$i][$j] = [$collapsibleRowTitles[$j], $collapsibleRowValues[$j]];
+        }
+
         return view('repairs.index')->with([
+            'collapsibleRows' => $collapsibleRows,
+            'repairs' => $repairs,
             'pageTitle' => 'Seznam oprav',
+            'tableHeaders' => $tableHeaders,
+            'tableRows' => $tableRows,
         ]);
     }
 
@@ -125,5 +160,16 @@ class RepairController extends Controller
             'repaired_at' => 'date',
             'state' => 'required|string',
         ]);
+    }
+
+    public function getGraphData()
+    {
+        return response()->json(Repair::whereMonth('repaired_at', '=', Carbon::now()->month)
+            ->groupBy('date')
+            ->orderBy('date', 'DESC')
+            ->get(array(
+                DB::raw('Date(repaired_at) as date'),
+                DB::raw('COUNT(*) as additions')
+            )));
     }
 }

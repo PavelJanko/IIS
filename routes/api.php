@@ -13,4 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('zarizeni/graf', 'DeviceController@getGraphData')->name('devices.graph');
+$controllerRoutes = [
+    'department' => 'ustavy',
+    'device' => 'zarizeni',
+    'employee' => 'zamestnanci',
+    'repair' => 'opravy',
+    'room' => 'mistnosti'
+];
+
+foreach ($controllerRoutes as $controllerName => $translatedName)
+    Route::get($translatedName . '/graf', ucfirst($controllerName) . 'Controller@getGraphData')->name(str_plural($controllerName) . '.graph');
