@@ -5,7 +5,11 @@
         extends: Line,
 
         mounted() {
-            let url = window.location.href.split('/').pop();
+            let linkArray = window.location.href.split('/');
+            let url = linkArray.pop();
+
+            while (url === "")
+                url = linkArray.pop();
 
             if (url.indexOf('?') === -1)
                 url = process.env.MIX_APP_URL + '/api/' + url + '/graf';

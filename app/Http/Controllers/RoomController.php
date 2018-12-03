@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Employee;
 use App\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -32,7 +33,7 @@ class RoomController extends Controller
         for ($i = 0; $i < $rooms->count(); $i++) {
             $tableRows[$i] = [
                 $rooms[$i]->id,
-                $rooms[$i]->label,
+                '<a href="' . route("rooms.show", $rooms[$i]->id) . '">' . $rooms[$i]->label . '</a>',
                 $rooms[$i]->isInCVT() ? '<icon icon="check" size="2x"></icon>' : '<icon icon="times" size="2x"></icon>',
                 $rooms[$i]->created_at->format('d. m. Y'),
                 $rooms[$i]->updated_at->format('d. m. Y')
@@ -41,7 +42,7 @@ class RoomController extends Controller
             $collapsibleRowTitles = ['Ústav', 'Počet zaměstnanců'];
 
             $collapsibleRowValues = [
-                '<a href="' . route("departments.show", $rooms[$i]->department->shortcut) . '">' . $rooms[$i]->department->shortcut . '</a>',
+                '<a href="' . route("departments.show", $rooms[$i]->department->id) . '">' . $rooms[$i]->department->shortcut . '</a>',
                 $rooms[$i]->employees->count()
 
             ];

@@ -32,8 +32,8 @@ class DepartmentController extends Controller
         for ($i = 0; $i < $departments->count(); $i++) {
             $tableRows[$i] = [
                 $departments[$i]->id,
-                $departments[$i]->name,
-                $departments[$i]->shortcut,
+                '<a href="' . route("departments.show", $departments[$i]->id) . '">' . $departments[$i]->name . '</a>',
+                '<a href="' . route("departments.show", $departments[$i]->id) . '">' . $departments[$i]->shortcut . '</a>',
                 $departments[$i]->created_at->format('d. m. Y'),
                 $departments[$i]->updated_at->format('d. m. Y')
             ];

@@ -52,12 +52,23 @@ class DatabaseSeeder extends Seeder
 
                 $employee->department_id = $employee->room->department->id;
                 $employee->updated_at = $employee->created_at->addDays(15);
-                $employee->update();
 
-                if ($employee->id == 1 || !rand(0, 9))
+                if ($employee->id === 1) {
                     $employee->assignRole('administrátor');
-                else if (!rand(0, 5))
+                    $employee->username = 'test.admin';
+                } else if ($employee->id === 2) {
                     $employee->assignRole('manažer');
+                    $employee->username = 'test.manager';
+                } else if ($employee->id === 3)
+                    $employee->username = 'test.employee';
+                else {
+                    if (!rand(0, 9))
+                        $employee->assignRole('administrátor');
+                    else if (!rand(0, 5))
+                        $employee->assignRole('manažer');
+                }
+
+                $employee->update();
             });
 
         $this->command->info('Seeding devices, associating them with keepers and sometimes rooms...');
