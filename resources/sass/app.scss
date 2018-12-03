@@ -41,6 +41,10 @@ html, body, #app {
     display: none !important;
 }
 
+.form-check {
+    padding-left: 2rem;
+}
+
 .nav-pills > .nav-link {
     background-color: $primaryColor;
     border-radius: 0;
@@ -71,11 +75,11 @@ html, body, #app {
         }
 
         th:first-child {
-            width: 4rem;
+            width: 3rem;
         }
 
-        th:nth-child(2) {
-            width: 30rem;
+        th:last-child {
+            width: 6rem;
         }
 
         th:not(:last-child) {
@@ -111,17 +115,18 @@ html, body, #app {
             }
         }
 
-        > tr:nth-child(odd), tr:last-child {
+        > tr:nth-child(odd) {
             > td:first-child {
-                width: 4rem;
+                width: 3rem;
             }
 
-            > td:nth-child(2) {
-                width: 30rem;
+            > td:last-child {
+                width: 6rem;
             }
 
             > td {
                 vertical-align: middle !important;
+                word-wrap: break-word;
             }
         }
     }

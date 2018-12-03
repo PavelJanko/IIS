@@ -17,7 +17,7 @@ class Employee extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'department_id', 'room_id', 'name', 'username', 'email', 'password', 'phone_number', 'street', 'building_number', 'city', 'zip_code'
     ];
 
     /**
@@ -28,18 +28,6 @@ class Employee extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new OrderScope());
-    }
 
     /**
      * Gets the department that the user belongs to.

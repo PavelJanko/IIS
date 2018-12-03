@@ -31,10 +31,14 @@ class DatabaseSeeder extends Seeder
         );
 
         app()['cache']->forget('spatie.permission.cache');
-        Permission::create(['name' => 'manage employees']);
+        Permission::create(['name' => 'assign manager role']);
+        $employeeManagement = Permission::create(['name' => 'manage employees']);
 
-        $adminRole = Role::create(['name' => 'administrator']);
+        $adminRole = Role::create(['name' => 'administrátor']);
         $adminRole->givePermissionTo(Permission::all());
+
+        $managerRole = Role::create(['name' => 'manažer']);
+        $managerRole->givePermissionTo($employeeManagement);
 
         $this->command->info('Seeding employees and associating them with departments and rooms...');
         factory(App\Employee::class, $employeeCount)->create()
@@ -47,10 +51,13 @@ class DatabaseSeeder extends Seeder
                     ;
 
                 $employee->department_id = $employee->room->department->id;
+                $employee->updated_at = $employee->created_at->addDays(15);
                 $employee->update();
 
-                if ($employee->id == 1 ||  !rand(0, 9))
-                    $employee->assignRole('administrator');
+                if ($employee->id == 1 || !rand(0, 9))
+                    $employee->assignRole('administrátor');
+                else if (!rand(0, 5))
+                    $employee->assignRole('manažer');
             });
 
         $this->command->info('Seeding devices, associating them with keepers and sometimes rooms...');
@@ -72,10 +79,10 @@ class DatabaseSeeder extends Seeder
                 while (($repair->repairer_id = rand(1, $employeeCount)) == $repair->claimant_id)
                     ;
 
-                $repair->claimed_at = \Carbon\Carbon::now()->subMonth();
+                $repair->claimed_at = \Carbon\Carbon::now()->subDays(15);
 
                 $repair->repaired_at = date('Y-m-d h:m:s', rand(
-                    $repair->claimed_at->getTimestamp(), \Carbon\Carbon::now()->timestamp
+                    $repair->claimed_at->getTimestamp(), \Carbon\Carbon::now()->addDays(15)->timestamp
                 ));
 
                 $repair->update();

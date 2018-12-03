@@ -29,5 +29,6 @@ $factory->define(App\Employee::class, function (Faker $faker) {
         'city' => nullableColumn($faker->city),
         'zip_code' => nullableColumn($faker->postcode),
         'remember_token' => str_random(10),
+        'created_at' => $faker->dateTimeBetween('-15 days', '+15 days')
     ];
 });

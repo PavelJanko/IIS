@@ -1,3 +1,6 @@
+<a class="btn btn-primary font-weight-bold mb-4 text-uppercase" href="{{ route(explode('.', Route::currentRouteName())[0] . '.create') }}" role="button">
+    <icon class="mr-1" icon="plus-square"></icon> Přidat
+</a>
 <div class="card mb-3">
     <table id="tableMain" class="table  m-0">
         <thead class="thead-dark">
@@ -44,20 +47,20 @@
 
 @section('scripts')
     <script>
-    $('.delete-dialog').click((e) => {
-        e.preventDefault();
+        $('.delete-dialog').click((e) => {
+            e.preventDefault();
 
-        swal({
-            title: 'Opravdu?',
-            text: 'Jste si jisti, že chcete položku odstranit?',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ano',
-            cancelButtonText: 'Ne'
-        }).then((result) => {
-            if (result.value)
-                $(e.target).parent().submit();
+            swal({
+                title: 'Opravdu?',
+                text: 'Jste si jisti, že chcete položku odstranit?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ano',
+                cancelButtonText: 'Ne'
+            }).then((result) => {
+                if (result.value)
+                    $(e.target).closest('form').submit();
+            });
         });
-    })
     </script>
 @endsection

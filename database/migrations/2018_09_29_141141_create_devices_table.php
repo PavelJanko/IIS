@@ -26,7 +26,7 @@ class CreateDevicesTable extends Migration
                 ->references('id')->on('rooms')
                 ->onDelete('set null');
 
-            $table->string('serial_number')->unique();
+            $table->string('serial_number');
             $table->string('name');
             $table->string('type');
             $table->string('manufacturer');

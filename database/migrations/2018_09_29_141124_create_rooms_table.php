@@ -22,7 +22,6 @@ class CreateRoomsTable extends Migration
                 ->onDelete('cascade');
 
             $table->string('label')->unique();
-            $table->string('description');
             $table->boolean('is_in_cvt');
             $table->timestamps();
         });

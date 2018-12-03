@@ -23,6 +23,15 @@
 
         {{-- Scripts --}}
         <script src="/js/app.js"></script>
+        @if(session('status'))
+            <script>
+                swal({
+                    title: '{{ session('status')['title'] }}',
+                    text: '{{ session('status')['message'] }}',
+                    type: '{{ session('status')['type'] }}',
+                });
+            </script>
+        @endif
         @yield('scripts')
     </body>
 </html>

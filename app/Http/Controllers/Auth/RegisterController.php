@@ -6,6 +6,7 @@ use App\Department;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Room;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -39,7 +40,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware(['auth', 'permission:manage employees']);
     }
 
     /**
@@ -52,32 +53,35 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'department_id' => 'required|numeric|exists:departments,id',
-            'room_id' => 'numeric|exists:rooms,id',
+            'room_id' => 'nullable|numeric|exists:rooms,id',
             'name' => 'required|string',
             'username' => 'required|unique:employees|string',
-            'email' => 'required|unique:employees|string',
-            'password' => 'required|string|confirmed',
-            'phone_number' => 'numeric',
-            'street' => 'string',
-            'building_number' => 'numeric',
-            'city' => 'string',
-            'zip_code' => 'numeric|size:5'
+            'email' => 'required|unique:employees|email',
+            'password' => 'required|string',
+            'role' => 'required|in:Zaměstnanec,Manažer,Administrátor',
+            'phone_number' => 'nullable|numeric',
+            'street' => 'nullable|string',
+            'building_number' => 'nullable|numeric',
+            'city' => 'nullable|string',
+            'zip_code' => 'nullable|numeric|size:5'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\Employee
+     * @param array $data
+     * @return \Illuminate\Http\RedirectResponse
      */
     protected function create(array $data)
     {
-        return Employee::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $data['password'] = Hash::make($data['password']);
+        $employee = Employee::create($data);
+
+        if ($data['role'] !== 'Zaměstnanec')
+            $employee->assignRole(strtolower($data['role']));
+
+        return redirect()->route('employees.show', ['id' => $employee->id]);
     }
 
     /**
@@ -88,11 +92,18 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $departments = Department::all();
+
+        $roles = ['Zaměstnanec', 'Manažer'];
+
+        if (Auth::user()->hasRole('administrátor'))
+            array_push($roles, 'Administrátor');
+
         $rooms = Room::all();
 
         return view('auth.register')->with([
             'departments' => $departments,
             'pageTitle' => 'Přidat zaměstnance',
+            'roles' => $roles,
             'rooms' => $rooms
         ]);
     }

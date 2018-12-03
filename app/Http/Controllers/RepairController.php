@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class RepairController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['getGraphData']);
+    }
+
     /**
      * Display a listing of the repairs.
      *
@@ -162,14 +167,26 @@ class RepairController extends Controller
         ]);
     }
 
-    public function getGraphData()
+    /**
+     * Retrieve the data for graph rendering.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getGraphData(Request $request)
     {
-        return response()->json(Repair::whereMonth('repaired_at', '=', Carbon::now()->month)
-            ->groupBy('date')
-            ->orderBy('date', 'DESC')
-            ->get(array(
-                DB::raw('Date(repaired_at) as date'),
-                DB::raw('COUNT(*) as additions')
-            )));
+        if ($request->ajax())
+            return response()->json([
+                'label' => 'Počet oprav',
+                'entries' => Repair::whereMonth('repaired_at', '=', Carbon::now()->month)
+                    ->groupBy('date')
+                    ->orderBy('date', 'DESC')
+                    ->get(array(
+                        DB::raw('Date(repaired_at) as date'),
+                        DB::raw('COUNT(*) as additions')
+                    ))
+            ]);
+
+        abort(404);
     }
 }
