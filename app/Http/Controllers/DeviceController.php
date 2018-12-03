@@ -6,9 +6,16 @@ use App\Device;
 use App\Employee;
 use App\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DeviceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['getGraphData']);
+    }
+
     /**
      * Display a listing of the devices.
      *
@@ -16,8 +23,44 @@ class DeviceController extends Controller
      */
     public function index()
     {
+        $devices = Device::orderBy('created_at', 'desc')->get();
+
+        $collapsibleRows = [];
+
+        $tableHeaders = ['', 'Název', 'Typ', 'Výrobce', 'Datum přidání', 'Akce'];
+        $tableRows = [];
+
+        for ($i = 0; $i < $devices->count(); $i++) {
+            $tableRows[$i] = [
+                $devices[$i]->id,
+                $devices[$i]->name,
+                $devices[$i]->type,
+                $devices[$i]->manufacturer,
+                $devices[$i]->created_at->format('d. m. Y')
+            ];
+
+            $collapsibleRowTitles = ['Je v ČVT', 'Místnost', $devices[$i]->room->isInCVT() ? 'Správce' : 'Vlastník', 'Počet dokončených oprav'];
+
+            $collapsibleRowValues = [
+                $devices[$i]->room->isInCVT() ?
+                    '<icon icon="check" size="2x"></icon>' :
+                    '<icon icon="times" size="2x"></icon>',
+                $devices[$i]->room->label,
+                '<a href="' . route("employees.show", $devices[$i]->keeper->username) . '">' . $devices[$i]->keeper->name . '</a>' .
+                '<a href="' . route("departments.show", $devices[$i]->keeper->department->id) . '"> (' . $devices[$i]->keeper->department->shortcut . ')</a>',
+                $devices[$i]->repairs->where('state', '=', 'Dokončena')->count()
+            ];
+
+            for ($j = 0; $j < count($collapsibleRowTitles); $j++)
+                $collapsibleRows[$i][$j] = [$collapsibleRowTitles[$j], $collapsibleRowValues[$j]];
+        }
+
         return view('devices.index')->with([
+            'collapsibleRows' => $collapsibleRows,
+            'devices' => $devices,
             'pageTitle' => 'Seznam zařízení',
+            'tableHeaders' => $tableHeaders,
+            'tableRows' => $tableRows,
         ]);
     }
 
@@ -51,21 +94,13 @@ class DeviceController extends Controller
 
         $device = Device::create($request->all());
 
-        return redirect()->route('devices.show', ['id' => $device->id]);
-    }
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Zařízení bylo úspěšně vytvořeno.';
 
-    /**
-     * Display the specified device.
-     *
-     * @param Device $device
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function show(Device $device)
-    {
-        return view ('devices.show')->with([
-            'device' => $device,
-            'pageTitle' => 'Detail zařízení ' . $device->serial_number,
-        ]);
+        $request->session()->flash('status', $status);
+        return redirect()->route('devices.index');
     }
 
     /**
@@ -76,9 +111,14 @@ class DeviceController extends Controller
      */
     public function edit(Device $device)
     {
+        $employees = Employee::all();
+        $rooms = Room::all();
+
         return view ('devices.edit')->with([
             'device' => $device,
+            'employees' => $employees,
             'pageTitle' => 'Upravit zařízení ' . $device->serial_number,
+            'rooms' => $rooms
         ]);
     }
 
@@ -94,9 +134,15 @@ class DeviceController extends Controller
     {
         $this->validateDevice($request);
 
-        $device = Device::update($request->all());
+        $device->update($request->all());
 
-        return redirect()->route('devices.show', ['id' => $device->id]);
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Zařízení bylo úspěšně upraveno.';
+
+        $request->session()->flash('status', $status);
+        return redirect()->route('devices.index');
     }
 
     /**
@@ -105,10 +151,16 @@ class DeviceController extends Controller
      * @param Device $device
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Device $device)
+    public function destroy(Request $request, Device $device)
     {
         Device::destroy($device->id);
 
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Zařízení bylo úspěšně odstraněno.';
+
+        $request->session()->flash('status', $status);
         return redirect()->route('devices.index');
     }
 
@@ -122,11 +174,34 @@ class DeviceController extends Controller
     {
         $this->validate($request, [
             'keeper_id' => 'required|numeric|exists:employees,id',
-            'room_id' => 'numeric|exists:rooms,id',
-            'serial_number' => 'required|unique:devices|alpha_num',
+            'room_id' => 'nullable|numeric|exists:rooms,id',
+            'serial_number' => 'required|alpha_num',
             'name' => 'required|string',
             'type' => 'required|string',
             'manufacturer' => 'required|string',
         ]);
+    }
+
+    /**
+     * Retrieve the data for graph rendering.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getGraphData(Request $request)
+    {
+        if ($request->ajax())
+            return response()->json([
+                'label' => 'Počet zařízení',
+                'entries' => Device::whereMonth('created_at', '=', Carbon::now()->month)
+                    ->groupBy('date')
+                    ->orderBy('date', 'DESC')
+                    ->get(array(
+                        DB::raw('Date(created_at) as date'),
+                        DB::raw('COUNT(*) as additions')
+                    ))
+            ]);
+
+        abort(404);
     }
 }

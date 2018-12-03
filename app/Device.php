@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
@@ -44,9 +45,9 @@ class Device extends Model
          * If the device doesn't have a room assigned (therefore it isn't in CVT),
          * then we simply return the keeper's assigned room.
          */
-        if ($this->room_id == null)
+        if ($this->room_id !== NULL)
             return $this->belongsTo(Room::class);
         else
-            return $this->keeper()->room;
+            return $this->keeper->belongsTo(Room::class);
     }
 }

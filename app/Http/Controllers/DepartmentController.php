@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['getGraphData']);
+    }
+    
     /**
      * Display a listing of the departments.
      *
@@ -14,8 +22,39 @@ class DepartmentController extends Controller
      */
     public function index()
     {
+        $departments = Department::orderBy('created_at', 'desc')->get();
+
+        $collapsibleRows = [];
+
+        $tableHeaders = ['', 'Název', 'Zkratka', 'Datum založení', 'Datum změny', 'Akce'];
+        $tableRows = [];
+
+        for ($i = 0; $i < $departments->count(); $i++) {
+            $tableRows[$i] = [
+                $departments[$i]->id,
+                '<a href="' . route("departments.show", $departments[$i]->id) . '">' . $departments[$i]->name . '</a>',
+                '<a href="' . route("departments.show", $departments[$i]->id) . '">' . $departments[$i]->shortcut . '</a>',
+                $departments[$i]->created_at->format('d. m. Y'),
+                $departments[$i]->updated_at->format('d. m. Y')
+            ];
+
+            $collapsibleRowTitles = ['Počet zaměstnanců', 'Počet místností'];
+
+            $collapsibleRowValues = [
+                $departments[$i]->employees->count(),
+                $departments[$i]->rooms->count()
+            ];
+
+            for ($j = 0; $j < count($collapsibleRowTitles); $j++)
+                $collapsibleRows[$i][$j] = [$collapsibleRowTitles[$j], $collapsibleRowValues[$j]];
+        }
+
         return view('departments.index')->with([
+            'collapsibleRows' => $collapsibleRows,
+            'departments' => $departments,
             'pageTitle' => 'Seznam ústavů',
+            'tableHeaders' => $tableHeaders,
+            'tableRows' => $tableRows,
         ]);
     }
 
@@ -44,6 +83,12 @@ class DepartmentController extends Controller
 
         $department = Department::create($request->all());
 
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Ústav byl úspěšně vytvořen.';
+
+        $request->session()->flash('status', $status);
         return redirect()->route('departments.show', ['id' => $department->id]);
     }
 
@@ -85,23 +130,39 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        $this->validateDepartment($request);
+        $this->validate($request, [
+            'shortcut' => $department->shortcut === $request->input('shortcut') ? 'required|alpha|regex:/[A-Z]{4}/i' : 'required|unique:departments|alpha|regex:/[A-Z]{4}/i',
+            'name' => $department->name === $request->input('name') ? 'required|string' : 'required|string|unique:departments',
+        ]);
 
-        $department = Department::update($request->all());
+        $department->update($request->all());
 
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Ústav byl úspěšně upraven.';
+
+        $request->session()->flash('status', $status);
         return redirect()->route('departments.show', ['id' => $department->id]);
     }
 
     /**
      * Remove the specified department from storage.
      *
+     * @param Request $request
      * @param Department $department
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Department $department)
+    public function destroy(Request $request, Department $department)
     {
         Department::destroy($department->id);
 
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Ústav byl úspěšně upraven.';
+
+        $request->session()->flash('status', $status);
         return redirect()->route('departments.index');
     }
 
@@ -114,8 +175,31 @@ class DepartmentController extends Controller
     public function validateDepartment(Request $request)
     {
         $this->validate($request, [
-            'shortcut' => 'required|unique:departments|alpha',
-            'name' => 'required|unique:departments|alpha',
+            'shortcut' => 'required|unique:departments|string',
+            'name' => 'required|unique:departments|string',
         ]);
+    }
+
+    /**
+     * Retrieve the data for graph rendering.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getGraphData(Request $request)
+    {
+        if ($request->ajax())
+            return response()->json([
+                'label' => 'Počet zaměstnanců',
+                'entries' => Employee::whereMonth('created_at', '=', Carbon::now()->month)
+                    ->groupBy('date')
+                    ->orderBy('date', 'DESC')
+                    ->get(array(
+                        DB::raw('Date(created_at) as date'),
+                        DB::raw('COUNT(*) as additions')
+                    ))
+            ]);
+
+        abort(404);
     }
 }

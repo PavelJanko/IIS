@@ -17,14 +17,16 @@ class CreateEmployeesTable extends Migration
             $table->increments('id');
 
             // Foreign key for user's department
-            $table->unsignedInteger('department_id')->default(1);
+            $table->unsignedInteger('department_id')->nullable();
             $table->foreign('department_id')
-                ->references('id')->on('departments');
+                ->references('id')->on('departments')
+                ->onDelete('set null');
 
             // Foreign key for user's room
             $table->unsignedInteger('room_id')->nullable();
             $table->foreign('room_id')
-                ->references('id')->on('rooms');
+                ->references('id')->on('rooms')
+                ->onDelete('set null');
 
             $table->string('name');
             $table->string('username')->unique();

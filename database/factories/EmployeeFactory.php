@@ -22,7 +22,6 @@ $factory->define(App\Employee::class, function (Faker $faker) {
         'name' => $faker->name,
         'username' => $faker->unique()->userName,
         'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm',
         'phone_number' => nullableColumn($faker->phoneNumber),
         'street' => nullableColumn($faker->streetName),
@@ -30,5 +29,6 @@ $factory->define(App\Employee::class, function (Faker $faker) {
         'city' => nullableColumn($faker->city),
         'zip_code' => nullableColumn($faker->postcode),
         'remember_token' => str_random(10),
+        'created_at' => $faker->dateTimeBetween('-15 days', '+15 days')
     ];
 });

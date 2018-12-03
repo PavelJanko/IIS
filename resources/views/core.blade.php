@@ -16,10 +16,22 @@
         <title>{{ config('app.name') }}{!! isset($pageTitle) ? ' &middot; ' . $pageTitle : '' !!}</title>
     </head>
     <body>
-        @include('partials.navbar-top')
-        @yield('layout')
+        <div id="app">
+            @include('partials.navbar-top')
+            @yield('layout')
+        </div>
 
         {{-- Scripts --}}
         <script src="/js/app.js"></script>
+        @if(session('status'))
+            <script>
+                swal({
+                    title: '{{ session('status')['title'] }}',
+                    text: '{{ session('status')['message'] }}',
+                    type: '{{ session('status')['type'] }}',
+                });
+            </script>
+        @endif
+        @yield('scripts')
     </body>
 </html>

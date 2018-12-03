@@ -12,16 +12,16 @@
 */
 
 Route::get('/', function () {
-    return view('core');
-})->name('homepage');
+    return redirect()->route('devices.index');
+});
 
 // Routes for authentication
 Route::get('prihlasit', 'Auth\LoginController@showLoginForm')->name('auth.login');
 Route::post('prihlasit', 'Auth\LoginController@login');
 Route::post('odhlasit', 'Auth\LoginController@logout')->name('auth.logout');
 
-Route::get('registrovat', 'Auth\RegisterController@showRegistrationForm')->name('employee.create');
-Route::post('registrovat', 'Auth\RegisterController@register')->name('employee.store');
+Route::get('zamestnanci/pridat', 'Auth\RegisterController@showRegistrationForm')->name('employees.create');
+Route::post('zamestnanci', 'Auth\RegisterController@register')->name('employees.store');
 
 $controllerRoutes = [
     'department' => 'ustavy',
@@ -32,14 +32,14 @@ $controllerRoutes = [
 ];
 
 // Routes for other controllers specified above
-Route::prefix('administrace')->group(function () use ($controllerRoutes) {
-    foreach ($controllerRoutes as $controllerName => $translatedName) {
+foreach ($controllerRoutes as $controllerName => $translatedName) {
+    if ($controllerName != 'employee') {
         Route::post($translatedName, ucfirst($controllerName) . 'Controller@store')->name(str_plural($controllerName) . '.store');
-        Route::get($translatedName, ucfirst($controllerName) . 'Controller@index')->name(str_plural($controllerName) . '.index');
         Route::get($translatedName . '/pridat', ucfirst($controllerName) . 'Controller@create')->name(str_plural($controllerName) . '.create');
-        Route::delete($translatedName . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@destroy')->name(str_plural($controllerName) . '.destroy');
-        Route::get($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@show')->name(str_plural($controllerName) . '.show');
-        Route::put($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@update')->name(str_plural($controllerName) . '.update');
-        Route::get($translatedName  . '/{' . $controllerName . '}/upravit', ucfirst($controllerName) . 'Controller@edit')->name(str_plural($controllerName) . '.edit');
     }
-});
+    Route::get($translatedName, ucfirst($controllerName) . 'Controller@index')->name(str_plural($controllerName) . '.index');
+    Route::delete($translatedName . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@destroy')->name(str_plural($controllerName) . '.destroy');
+    Route::get($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@show')->name(str_plural($controllerName) . '.show');
+    Route::put($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@update')->name(str_plural($controllerName) . '.update');
+    Route::get($translatedName  . '/{' . $controllerName . '}/upravit', ucfirst($controllerName) . 'Controller@edit')->name(str_plural($controllerName) . '.edit');
+};

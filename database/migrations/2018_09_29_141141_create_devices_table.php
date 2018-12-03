@@ -18,13 +18,15 @@ class CreateDevicesTable extends Migration
 
             $table->unsignedInteger('keeper_id');
             $table->foreign('keeper_id')
-                ->references('id')->on('employees');
+                ->references('id')->on('employees')
+                ->onDelete('cascade');
 
             $table->unsignedInteger('room_id')->nullable();
             $table->foreign('room_id')
-                ->references('id')->on('rooms');
+                ->references('id')->on('rooms')
+                ->onDelete('set null');
 
-            $table->string('serial_number')->unique();
+            $table->string('serial_number');
             $table->string('name');
             $table->string('type');
             $table->string('manufacturer');

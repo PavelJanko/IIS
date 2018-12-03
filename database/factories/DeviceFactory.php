@@ -9,5 +9,6 @@ $factory->define(App\Device::class, function (Faker $faker) {
         'name' => $faker->words(rand(1, 5), true),
         'type' => $faker->randomElement(['PC', 'Laptop', 'Projector', 'Printer', 'Scanner', 'Router']),
         'manufacturer' => $faker->randomElement(['Lenovo', 'Canon', 'LG', 'Samsung', 'Apple', 'Dell']),
+        'created_at' => $faker->dateTimeBetween('-15 days', '+15 days'),
     ];
 });

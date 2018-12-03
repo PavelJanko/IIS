@@ -4,9 +4,6 @@
     <div class="card">
         <div class="d-flex card-header">
             <span class="text-uppercase">Přihlásit se</span>
-            @if(App::environment('local'))
-                <span class="d-flex flex-grow-1 justify-content-end"><samp class="mr-3">Ukázkové údaje: </samp><kbd><kbd>{{ \App\Employee::first()->username }}</kbd> / <kbd>secret</kbd></kbd></span>
-            @endif
         </div>
         <div class="card-body py-5">
             <form method="POST" action="{{ route('auth.login') }}">

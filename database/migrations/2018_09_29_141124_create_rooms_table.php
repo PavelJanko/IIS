@@ -18,10 +18,10 @@ class CreateRoomsTable extends Migration
 
             $table->unsignedInteger('department_id');
             $table->foreign('department_id')
-                ->references('id')->on('departments');
+                ->references('id')->on('departments')
+                ->onDelete('cascade');
 
             $table->string('label')->unique();
-            $table->string('description');
             $table->boolean('is_in_cvt');
             $table->timestamps();
         });

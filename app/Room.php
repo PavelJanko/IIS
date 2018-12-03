@@ -45,4 +45,14 @@ class Room extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    /**
+     * Get all the employees of the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
