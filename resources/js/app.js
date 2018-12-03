@@ -9,11 +9,11 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import { faCheck, faPenSquare, faPlusSquare, faTimes, faTimesSquare } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck, faCheckSquare, faCogs, faHandPointDown, faPenSquare, faPlusSquare, faTimes, faTimesSquare } from '@fortawesome/pro-solid-svg-icons';
 import { library as faLibrary }  from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-faLibrary.add(faCheck, faPenSquare, faPlusSquare, faTimes, faTimesSquare);
+faLibrary.add(faCheck, faCheckSquare, faCogs, faHandPointDown, faPenSquare, faPlusSquare, faTimes, faTimesSquare);
 Vue.component('icon', FontAwesomeIcon);
 
 // Set the moment.js localization to Czech
