@@ -37,9 +37,19 @@ foreach ($controllerRoutes as $controllerName => $translatedName) {
         Route::post($translatedName, ucfirst($controllerName) . 'Controller@store')->name(str_plural($controllerName) . '.store');
         Route::get($translatedName . '/pridat', ucfirst($controllerName) . 'Controller@create')->name(str_plural($controllerName) . '.create');
     }
+
+    if ($controllerName != 'repair') {
+        Route::put($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@update')->name(str_plural($controllerName) . '.update');
+        Route::get($translatedName  . '/{' . $controllerName . '}/upravit', ucfirst($controllerName) . 'Controller@edit')->name(str_plural($controllerName) . '.edit');
+    }
+
+    if ($controllerName == 'room' || $controllerName == 'department')
+        Route::get($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@show')->name(str_plural($controllerName) . '.show');
+
     Route::get($translatedName, ucfirst($controllerName) . 'Controller@index')->name(str_plural($controllerName) . '.index');
     Route::delete($translatedName . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@destroy')->name(str_plural($controllerName) . '.destroy');
-    Route::get($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@show')->name(str_plural($controllerName) . '.show');
-    Route::put($translatedName  . '/{' . $controllerName . '}', ucfirst($controllerName) . 'Controller@update')->name(str_plural($controllerName) . '.update');
-    Route::get($translatedName  . '/{' . $controllerName . '}/upravit', ucfirst($controllerName) . 'Controller@edit')->name(str_plural($controllerName) . '.edit');
 };
+
+Route::get('opravy/{device}/zazadat', 'RepairController@claim')->name('repairs.claim');
+Route::get('opravy/{repair}/rozpracovat', 'RepairController@proceed')->name('repairs.proceed');
+Route::get('opravy/{repair}/dokoncit', 'RepairController@finish')->name('repairs.finish');

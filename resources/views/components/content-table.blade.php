@@ -1,6 +1,8 @@
-<a class="btn btn-primary font-weight-bold mb-4 text-uppercase" href="{{ route(explode('.', Route::currentRouteName())[0] . '.create') }}" role="button">
-    <icon class="mr-1" icon="plus-square"></icon> Přidat
-</a>
+@unless(explode('.', Route::currentRouteName())[0] == 'repairs')
+    <a class="btn btn-primary font-weight-bold mb-4 text-uppercase" href="{{ route(explode('.', Route::currentRouteName())[0] . '.create') }}" role="button">
+        <icon class="mr-1" icon="plus-square"></icon> Přidat
+    </a>
+@endunless
 <div class="card mb-3">
     <table id="tableMain" class="table  m-0">
         <thead class="thead-dark">
@@ -20,7 +22,18 @@
                         @endunless
                     @endforeach
                     <td>
-                        <a href="{{ route(explode('.', Route::currentRouteName())[0] . '.edit', $tableColumns[0]) }}"><icon icon="pen-square" size="2x"></icon></a>
+                        @if(explode('.', Route::currentRouteName())[0] == 'devices')
+                            <a href="{{ route('repairs.claim', $tableColumns[0]) }}"><icon icon="cogs" size="2x"></icon></a>
+                        @endif
+                        @if(explode('.', Route::currentRouteName())[0] == 'repairs')
+                            @if($tableColumns[4] == 'Čekající')
+                                <a href="{{ route('repairs.proceed', $tableColumns[0]) }}"><icon icon="hand-point-down" size="2x"></icon></a>
+                            @elseif($tableColumns[4] == 'Prováděna')
+                                <a href="{{ route('repairs.finish', $tableColumns[0]) }}"><icon icon="check-square" size="2x"></icon></a>
+                            @endif
+                        @else
+                            <a href="{{ route(explode('.', Route::currentRouteName())[0] . '.edit', $tableColumns[0]) }}"><icon icon="pen-square" size="2x"></icon></a>
+                        @endif
                         <form class="d-inline" action="{{ route(explode('.', Route::currentRouteName())[0] . '.destroy', $tableColumns[0]) }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}

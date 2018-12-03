@@ -46,7 +46,7 @@ class DeviceController extends Controller
                     '<icon icon="check" size="2x"></icon>' :
                     '<icon icon="times" size="2x"></icon>',
                 $devices[$i]->room->label,
-                '<a href="' . route("employees.show", $devices[$i]->keeper->username) . '">' . $devices[$i]->keeper->name . '</a>' .
+                $devices[$i]->keeper->name,
                 '<a href="' . route("departments.show", $devices[$i]->keeper->department->id) . '"> (' . $devices[$i]->keeper->department->shortcut . ')</a>',
                 $devices[$i]->repairs->where('state', '=', 'Dokončena')->count()
             ];

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Device;
 use App\Repair;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RepairController extends Controller
@@ -148,6 +150,78 @@ class RepairController extends Controller
         Repair::destroy($repair->id);
 
         return redirect()->route('repairs.index');
+    }
+
+    /**
+     * Create a new repair claim for the specified device.
+     *
+     * @param Request $request
+     * @param Device $device
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function claim(Request $request, Device $device)
+    {
+        Repair::create([
+            'device_id' => $device->id,
+            'claimant_id' => Auth::user()->id,
+            'state' => 'Čekající',
+            'claimed_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+
+        $status = [];
+        $status['title'] = 'Úspěch!';
+        $status['type'] = 'success';
+        $status['message'] = 'Oprava úspěšně vytvořena.';
+
+        $request->session()->flash('status', $status);
+        return redirect()->route('devices.index');
+    }
+
+    /**
+     * Mark the specified repair as in proceedings.
+     *
+     * @param Request $request
+     * @param Repair $repair
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function proceed(Request $request, Repair $repair)
+    {
+        if ($repair->state == 'Čekající') {
+            $repair->state = 'Prováděna';
+            $repair->update();
+
+            $status = [];
+            $status['title'] = 'Úspěch!';
+            $status['type'] = 'success';
+            $status['message'] = 'Oprava je označena za prováděnou.';
+
+            $request->session()->flash('status', $status);
+        } return redirect()->route('repairs.index');
+    }
+
+    /**
+     * Mark the specified repair as finished.
+     *
+     * @param Request $request
+     * @param Repair $repair
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function finish(Request $request, Repair $repair)
+    {
+        if ($repair->state == 'Prováděna') {
+            $repair->state = 'Dokončena';
+            $repair->repairer_id = Auth::user()->id;
+            $repair->repaired_at = Carbon::now();
+            $repair->update();
+
+            $status = [];
+            $status['title'] = 'Úspěch!';
+            $status['type'] = 'success';
+            $status['message'] = 'Oprava je označena za dokončenou.';
+
+            $request->session()->flash('status', $status);
+        } return redirect()->route('repairs.index');
     }
 
     /**
