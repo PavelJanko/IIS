@@ -126,11 +126,11 @@ class EmployeeController extends Controller
             'email' => $employee->email === $request->input('email') ? 'required|email' : 'required|unique:employees|email',
             'password' => 'nullable|string',
             'role' => 'required|in:Zaměstnanec,Manažer,Administrátor',
-            'phone_number' => 'nullable|numeric',
+            'phone_number' => 'nullable|numeric|digits:9',
             'street' => 'nullable|string',
-            'building_number' => 'nullable|numeric',
+            'building_number' => 'nullable|numeric|digits:5',
             'city' => 'nullable|string',
-            'zip_code' => 'nullable|numeric|size:5'
+            'zip_code' => 'nullable|numeric'
         ]);
 
         if ($request->input('password') === '')
@@ -149,7 +149,7 @@ class EmployeeController extends Controller
         $status['message'] = 'Zaměstnanec byl úspěšně upraven.';
 
         $request->session()->flash('status', $status);
-        return redirect()->route('employees.show', ['id' => $employee->id]);
+        return redirect()->route('employees.index');
     }
 
     /**

@@ -29,7 +29,7 @@ class CreateRepairsTable extends Migration
             $table->unsignedInteger('repairer_id')->nullable();
             $table->foreign('repairer_id')
                 ->references('id')->on('employees')
-                ->onDelete('set null');
+                ->onDelete('cascade');
             $table->timestamp('repaired_at')->nullable();
 
             $table->string('state');
