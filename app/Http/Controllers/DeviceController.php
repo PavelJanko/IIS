@@ -39,7 +39,7 @@ class DeviceController extends Controller
                 $devices[$i]->created_at->format('d. m. Y')
             ];
 
-            $collapsibleRowTitles = ['Je v ČVT', 'Místnost', $devices[$i]->room->isInCVT() ? 'Správce' : 'Vlastník', 'Počet dokončených oprav'];
+            $collapsibleRowTitles = ['Je v ČVT', 'Místnost', 'Správce', 'Počet dokončených oprav'];
 
             $departmentRow = '';
 
@@ -49,10 +49,10 @@ class DeviceController extends Controller
                 $departmentRow = '<a href="' . route("departments.show", $devices[$i]->keeper->department->id) . '"> (' . $devices[$i]->keeper->department->shortcut . ')</a>';
 
             $collapsibleRowValues = [
-                $devices[$i]->room->isInCVT() ?
-                    '<icon icon="check" size="2x"></icon>' :
-                    '<icon icon="times" size="2x"></icon>',
-                $devices[$i]->room->label,
+                $devices[$i]->room === NULL || !$devices[$i]->room->isInCVT() ?
+                    '<icon icon="times" size="2x"></icon>' :
+                    '<icon icon="check" size="2x"></icon>',
+                $devices[$i]->room === NULL ? 'Žádná' : $devices[$i]->room->label,
                 $devices[$i]->keeper->name,
                 $departmentRow,
                 $devices[$i]->repairs->where('state', '=', 'Dokončena')->count()

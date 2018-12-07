@@ -39,13 +39,13 @@ class RepairController extends Controller
                 $repairs[$i]->state
             ];
 
-            $collapsibleRowTitles = ['Opravář', 'Opraveno dne', $repairs[$i]->device->room->isInCVT() ? 'Správce' : 'Vlastník', 'Místnost zařízení'];
+            $collapsibleRowTitles = ['Opravář', 'Opraveno dne', 'Správce', 'Místnost zařízení'];
 
             $collapsibleRowValues = [
                 $repairs[$i]->repairer === null ? 'Oprava nedokončena' : $repairs[$i]->repairer->name,
                 $repairs[$i]->repairer === null ? 'Oprava nedokončena' : $repairs[$i]->repaired_at->format('d. m. Y'),
                 $repairs[$i]->device->keeper->name,
-                $repairs[$i]->device->room->label
+                $repairs[$i]->device->room === NULL ? 'Žádná' : $repairs[$i]->device->room->label,
             ];
 
             for ($j = 0; $j < count($collapsibleRowTitles); $j++)

@@ -18,7 +18,7 @@
                     <div class="col-md-6">
                         <select id="keeper_id" class="form-control{{ $errors->has('keeper_id') ? ' is-invalid' : '' }}" name="keeper_id" required>
                             @foreach($employees as $keeper)
-                                <option value="{{ $keeper->id }}"{{ $device->keeper_id == $keeper->id ? ' selected' : '' }}>{{ $keeper->name }} ({{ $keeper->department->shortcut }})</option>
+                                <option value="{{ $keeper->id }}"{{ $device->keeper_id == $keeper->id ? ' selected' : '' }}>{{ $keeper->name }}</option>
                             @endforeach
                         </select>
                     </div>

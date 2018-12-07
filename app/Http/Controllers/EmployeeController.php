@@ -46,7 +46,7 @@ class EmployeeController extends Controller
             $collapsibleRowValues = [
                 $employees[$i]->getRoleNames()->count() === 0 ? 'Zaměstnanec' : ucfirst($employees[$i]->getRoleNames()->first()),
                 $employees[$i]->department === NULL ? 'Žádný' : '<a href="' . route("departments.show", $employees[$i]->department->id) . '">' . $employees[$i]->department->shortcut . '</a>',
-                $employees[$i]->room->label,
+                $employees[$i]->room === NULL ? 'Žádná' : $employees[$i]->room->label,
                 $employees[$i]->phone_number === NULL ? 'Nevyplněno' : $employees[$i]->phone_number,
                 $employees[$i]->street === NULL ? 'Nevyplněno' : $employees[$i]->street,
                 $employees[$i]->building_number === NULL ? 'Nevyplněno' : $employees[$i]->building_number,
