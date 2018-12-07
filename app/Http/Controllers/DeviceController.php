@@ -41,20 +41,12 @@ class DeviceController extends Controller
 
             $collapsibleRowTitles = ['Je v ČVT', 'Místnost', 'Správce', 'Počet dokončených oprav'];
 
-            $departmentRow = '';
-
-            if ($devices[$i]->keeper->department === NULL)
-                $departmentRow = 'Žádný';
-            else
-                $departmentRow = '<a href="' . route("departments.show", $devices[$i]->keeper->department->id) . '"> (' . $devices[$i]->keeper->department->shortcut . ')</a>';
-
             $collapsibleRowValues = [
                 $devices[$i]->room === NULL || !$devices[$i]->room->isInCVT() ?
                     '<icon icon="times" size="2x"></icon>' :
                     '<icon icon="check" size="2x"></icon>',
                 $devices[$i]->room === NULL ? 'Žádná' : $devices[$i]->room->label,
                 $devices[$i]->keeper->name,
-                $departmentRow,
                 $devices[$i]->repairs->where('state', '=', 'Dokončena')->count()
             ];
 
