@@ -41,8 +41,15 @@ class RoomController extends Controller
 
             $collapsibleRowTitles = ['Ústav', 'Počet zaměstnanců'];
 
+            $departmentRow = '';
+
+            if ($rooms[$i]->department === NULL)
+                $departmentRow = 'Žádný';
+            else
+                $departmentRow = '<a href="' . route("departments.show", $rooms[$i]->department->id) . '">' . $rooms[$i]->department->shortcut . '</a>';
+
             $collapsibleRowValues = [
-                '<a href="' . route("departments.show", $rooms[$i]->department->id) . '">' . $rooms[$i]->department->shortcut . '</a>',
+                $departmentRow,
                 $rooms[$i]->employees->count()
 
             ];

@@ -30,7 +30,11 @@
                     <div class="col-md-6">
                         <select id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" name="department_id" required>
                             @foreach($departments as $department)
-                                <option value="{{ $department->id }}"{{ $room->department_id == $department->id ? ' selected' : '' }}>{{ $department->shortcut }}</option>
+                                @if($room->department_id !== NULL)
+                                    <option value="{{ $department->id }}"{{ $room->department_id == $department->id ? ' selected' : '' }}>{{ $department->shortcut }}</option>
+                                @else
+                                    <option value="{{ $department->id }}">{{ $department->shortcut }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

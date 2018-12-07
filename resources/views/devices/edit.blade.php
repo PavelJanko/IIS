@@ -29,7 +29,11 @@
                         <select id="room_id" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" name="room_id">
                             <option value="">Žádná</option>
                             @foreach($rooms as $room)
-                                <option value="{{ $room->id }}"{{ $device->room_id == $room->id ? ' selected' : '' }}>{{ $room->label }}</option>
+                                @if($device->room_id !== NULL)
+                                    <option value="{{ $room->id }}"{{ $device->room_id == $room->id ? ' selected' : '' }}>{{ $room->label }}</option>
+                                @else
+                                    <option value="{{ $room->id }}">{{ $room->label }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

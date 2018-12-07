@@ -26,7 +26,11 @@
                     <div class="col-md-6">
                         <select id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" name="department_id" required>
                             @foreach($departments as $department)
-                                <option value="{{ $department->id }}"{{ $employee->department->id === $department->id ? ' selected' : '' }}>{{ $department->shortcut }}</option>
+                                @if($employee->department->id !== NULL)
+                                    <option value="{{ $department->id }}"{{ $employee->department->id === $department->id ? ' selected' : '' }}>{{ $department->shortcut }}</option>
+                                @else
+                                    <option value="{{ $department->id }}">{{ $department->shortcut }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -37,7 +41,11 @@
                         <select id="room_id" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" name="room_id">
                             <option value="">Žádná</option>
                             @foreach($rooms as $room)
-                                <option value="{{ $room->id }}"{{ $employee->room->id == $room->id ? ' selected' : '' }}>{{ $room->label }}</option>
+                                @if($employee->room->id !== NULL)
+                                    <option value="{{ $room->id }}"{{ $employee->room->id == $room->id ? ' selected' : '' }}>{{ $room->label }}</option>
+                                @else
+                                    <option value="{{ $room->id }}">{{ $room->label }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
